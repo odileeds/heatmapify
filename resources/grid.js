@@ -331,7 +331,7 @@ S().ready(function(){
 					lo = parseFloat(lon);
 					la = parseFloat(lat);
 					if(geojson) geojson += ',\n';
-					geojson += '{"type":"Feature","id":'+i+',"properties":{"rows":'+grid[lat][lon].n+'},"geometry":{"type":"Polygon","coordinates":[[['+(lo - dlon).toFixed(5)+','+(la - dlat).toFixed(5)+'],['+(lo - dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la - dlat).toFixed(5)+']]]}}';
+					geojson += '{"type":"Feature","id":'+i+',"properties":{"points":'+grid[lat][lon].n+'},"geometry":{"type":"Polygon","coordinates":[[['+(lo - dlon).toFixed(5)+','+(la - dlat).toFixed(5)+'],['+(lo - dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la - dlat).toFixed(5)+']]]}}';
 				}
 			}
 			geojson = '{ "type": "FeatureCollection","features":['+geojson+'] }';
