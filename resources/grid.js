@@ -66,6 +66,10 @@ S().ready(function(){
 		S('#gridsize').on('change',{me:this},function(e){
 			if(e.data.me.data) e.data.me.makeMap();
 		});
+		S('#validation_form').on('submit',function(e){
+			e.preventDefault();
+			e.stopPropagation();
+		});
 
 
 
