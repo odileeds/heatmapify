@@ -309,17 +309,17 @@ S().ready(function(){
 				lat = this.data.features[i].geometry.coordinates[1];
 				
 				if(typeof lat==="number" && typeof lon==="number"){
-					lat = parseFloat(round(lat,dlat).toFixed(6));
+
+					lat = parseFloat((Math.floor(lat/dlat)*dlat).toFixed(6));
 						
 					// See if we've worked out the longitude bin size for this latitude bin
-					if(!dlons[lat]) dlons[lat] = parseFloat((dlat / Math.cos(lat * d2r)).toFixed(6));
+					if(!dlons[lat]) dlons[lat] = Math.floor(1e6 * dlat / Math.cos(lat * d2r))/1e6;
 
-					dlon = dlons[lat];
-					lon = parseFloat(round(lon,dlon).toFixed(6));
+					lon = parseFloat((Math.floor(lon/dlons[lat])*dlons[lat]).toFixed(6))
 
 					if(!grid[lat]){ grid[lat] = {}; }
 					if(!grid[lat][lon]){
-						grid[lat][lon] = {'n':0,'dlat':dlat,'dlon':dlon};
+						grid[lat][lon] = {'n':0,'dlat':dlat,'dlon':dlons[lat]};
 					}
 					grid[lat][lon].n++;
 				}
@@ -333,14 +333,14 @@ S().ready(function(){
 			var geojson = "";
 			for(lat in grid){
 				for(lon in grid[lat]){
-					dlon = grid[lat][lon].dlon/2;
-					dlat = grid[lat][lon].dlat/2;
+					dlon = grid[lat][lon].dlon;
+					dlat = grid[lat][lon].dlat;
 					if(grid[lat][lon].n > this.mx) this.mx = grid[lat][lon].n;
 					if(grid[lat][lon].n < this.mn) this.mn = grid[lat][lon].n;
 					lo = parseFloat(lon);
 					la = parseFloat(lat);
 					if(geojson) geojson += ',\n';
-					geojson += '{"type":"Feature","id":'+i+',"properties":{"points":'+grid[lat][lon].n+'},"geometry":{"type":"Polygon","coordinates":[[['+(lo - dlon).toFixed(5)+','+(la - dlat).toFixed(5)+'],['+(lo - dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la - dlat).toFixed(5)+']]]}}';
+					geojson += '{"type":"Feature","id":'+i+',"properties":{"points":'+grid[lat][lon].n+'},"geometry":{"type":"Polygon","coordinates":[[['+(lo).toFixed(5)+','+(la).toFixed(5)+'],['+(lo).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la + dlat).toFixed(5)+'],['+(lo + dlon).toFixed(5)+','+(la).toFixed(5)+']]]}}';
 				}
 			}
 			geojson = '{ "type": "FeatureCollection","features":['+geojson+'] }';
