@@ -251,7 +251,7 @@
 				<input type="hidden" name="urls[]" value="" />
 				<input type="hidden" name="files[]" value="" />
 
-				<p>Generate a GeoJSON file from a CSV file in three easy steps. The CSV file will need to contain two columns that contain the coordinates.</p>
+				<p>Generate a GeoJSON heatmap from a GeoJSON file in three easy steps. The heatmap will be made by summing up the number of GeoJSON points that fall in each grid cell.</p>
 
 				<h2 class="step1">1. Select a GeoJSON file</h2>
 				<p>We'll only work with it within your browser so you don't need to worry about anything getting uploaded.</p>
@@ -263,13 +263,13 @@
 				</div>
 				<output id="list"></output>
 
-				<h2 class="step2">2. Check the result</h2>
+				<h2 class="step2">2. Heatmap</h2>
 				<p>The result of heatmapping your file appears on the map below.</p>
 				<label for="gridsize">Grid size (m)</label><input type="number" value="150" id="gridsize" />
 				<output id="contents"></output>
 				
 
-				<h2 class="step3">3. Save the GeoJSON file</h2>
+				<h2 class="step3">3. Save the result</h2>
 				<output id="geojson">
 					<textarea></textarea>
 					<div id="filesize"></div>
