@@ -94,6 +94,18 @@ S().ready(function(){
 			'Population': 'rgb(232,173,170) -1000, rgb(232, 173, 170) 0, rgb(255,â€‹243,128) 0, rgb(135,247,23) 4, rgb(76,196,23) 11, rgb(52,128,23) 50',
 			'Referendum': '#4BACC6 0, #B6DDE8 50%, #FFF380 50%, #FFFF00 100%',
 		}
+
+		// Create a map label pane so labels can sit above polygons
+		this.map.createPane('labels');
+		this.map.getPane('labels').style.zIndex = 650;
+		this.map.getPane('labels').style.pointerEvents = 'none';
+
+		var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', {
+			attribution: '',
+			pane: 'labels'
+		}).addTo(this.map);
+
+
 		/*
 		L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
 			attribution: 'Tiles: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>. Data: <a href="http://openstreetmap.org">OpenStreetMap</a> (ODbL); <a href="https://odileeds.org/">ODI Leeds</a>; <a href="http://thingsmanchester.org.uk/">Things Manchester</a>',
@@ -101,12 +113,12 @@ S().ready(function(){
 			maxZoom: 19
 		}).addTo(this.map);
 		*/
-		L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+		L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 			subdomains: 'abcd',
 			maxZoom: 19
 		}).addTo(this.map);
-
+		
 		this.map.attributionControl.setPrefix('');
 
 		// Define colour routines
@@ -247,8 +259,6 @@ S().ready(function(){
 				if(c[1] < this.range.lat.min) this.range.lat.min = c[1];
 				if(c[1] > this.range.lat.max) this.range.lat.max = c[1];
 			}
-			console.log(this.range);
-
 
 			this.makeMap();
 		}
@@ -274,7 +284,6 @@ S().ready(function(){
 			// 2*PI*R = circumference of the Earth (approx because it isn't spherical)
 			circ = 6371000 * 2 * Math.PI;
 			d2r = Math.PI / 180;
-
 
 			n = this.data.features.length;
 
@@ -393,7 +402,7 @@ S().ready(function(){
 			}
 			var _obj = this;
 			function style(feature) {
-				var c = getColour(feature.properties.rows,_obj.mn,_obj.mx);
+				var c = getColour(feature.properties.points,_obj.mn,_obj.mx);
 				return {
 					fillColor: c,
 					stroke: 0,
@@ -420,7 +429,7 @@ S().ready(function(){
 				});
 			}
 
-			this.heat = L.geoJson(JSON.parse(geojson),{style:style,onEachFeature: onEachFeature}).addTo(this.map);
+			this.heat = L.geoJSON(JSON.parse(geojson),{style:style,onEachFeature: onEachFeature}).addTo(this.map);
 			
 			S('#geojson textarea').html(geojson)
 
